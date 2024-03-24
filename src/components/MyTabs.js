@@ -11,7 +11,6 @@ import SalesScreen from "../screens/SalesScreen";
 import CartScreen from "../screens/CartScreen";
 
 import ManageScreen from "../screens/ManageScreen";
-import AddProductScreen from "../screens/AddProductScreen";
 import EditProductsScreen from "../screens/EditProductsScreen";
 import SalesListScreen from "../screens/SalesListScreen";
 import DashboardScreen from "../screens/DashboardScreen";
@@ -88,16 +87,6 @@ function ManageStack() {
       }}
     >
       <Stack.Screen name="Manage" component={ManageScreen} />
-      <Stack.Screen
-        name="AddProductScreen"
-        component={AddProductScreen}
-        options={() => {
-          return {
-            headerShown: true,
-            title: "Adicionar Produto",
-          };
-        }}
-      />
       <Stack.Screen
         name="EditProductsScreen"
         component={EditProductsScreen}
