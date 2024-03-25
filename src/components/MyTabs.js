@@ -1,10 +1,14 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import React from "react";
+import { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Icon from "react-native-vector-icons/Ionicons";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { Badge } from "react-native-elements";
+
 import { connect } from "react-redux";
+import { setProductsList } from "../../context/actions/productsAction";
 
 import SalesScreen from "../screens/SalesScreen";
 
@@ -15,10 +19,25 @@ import EditProductsScreen from "../screens/EditProductsScreen";
 import SalesListScreen from "../screens/SalesListScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 
+
+import { getAllProducts } from "../Database/dbStore";
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const MyTabs = ({ cart }) => {
+const MyTabs = (props) => {
+
+  async function fetchProducts() {
+    const products = await getAllProducts();
+    props.setProductsList(products);
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+
+
   return (
     <Tab.Navigator
       initialRouteName={"Loja"}
@@ -39,10 +58,10 @@ const MyTabs = ({ cart }) => {
 
           return (
             <View>
-              <Icon name={iconName} size={size} color={color} />
-              {route.name === "Carrinho" && cart.length > 0 && (
+              <Ionicons name={iconName} size={size} color={color} />
+              {route.name === "Carrinho" && props.cart.length > 0 && (
                 <Badge
-                  value={cart.length}
+                  value={props.cart.length}
                   status="error"
                   containerStyle={{ position: "absolute", top: -4, right: -6 }}
                 />
@@ -58,7 +77,7 @@ const MyTabs = ({ cart }) => {
       })}
     >
       <Tab.Screen name="Loja" component={SalesStack} />
-      {cart.length > 0 && <Tab.Screen name="Carrinho" component={CartScreen} />}
+      {props.cart.length > 0 && <Tab.Screen name="Carrinho" component={CartScreen} />}
       <Tab.Screen name="Gerenciar" component={ManageStack} />
     </Tab.Navigator>
   );
@@ -154,10 +173,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  console.log(JSON.stringify(state.cart.cart));
   return {
     cart: state.cart.cart,
+    products: state.products.products,
   };
 };
 
-export default connect(mapStateToProps)(MyTabs);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setProductsList: (products) => dispatch(setProductsList(products)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyTabs);

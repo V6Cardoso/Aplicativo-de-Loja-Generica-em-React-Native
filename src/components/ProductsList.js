@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -12,60 +12,13 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import ProductItem from "../components/ProductItem";
 
+import { connect } from "react-redux";
+import { setProductsList } from "../../context/actions/productsAction";
+
+import { getAllProducts } from "../Database/dbStore";
+
 const ProductsList = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState([
-    { id: 1, name: "Product 1", price: 10, category: {text: "Categoria 1", color: "green"}, description: "Descrição do produto 1 muito legal e interessante lorem ipsum dolor sit amet" },
-    { id: 2, name: "Product 2", price: 20 },
-    { id: 3, name: "Product 3", price: 15 },
-    { id: 4, name: "Product 4", price: 25 },
-    { id: 5, name: "Product 5", price: 30 },
-    { id: 6, name: "Product 6", price: 35 },
-    { id: 7, name: "Product 7", price: 40 },
-    { id: 8, name: "Product 8", price: 45 },
-    { id: 9, name: "Product 9", price: 50 },
-    { id: 10, name: "Product 10", price: 55 },
-    { id: 11, name: "Product 11", price: 60 },
-    { id: 12, name: "Product 12", price: 65 },
-    { id: 13, name: "Product 13", price: 70 },
-    { id: 14, name: "Product 14", price: 75 },
-    { id: 15, name: "Product 15", price: 80 },
-    { id: 16, name: "Product 16", price: 85 },
-    { id: 17, name: "Product 17", price: 90 },
-    { id: 18, name: "Product 18", price: 95 },
-    { id: 19, name: "Product 19", price: 100 },
-    { id: 20, name: "Product 20", price: 105 },
-    { id: 21, name: "Product 21", price: 110 },
-    { id: 22, name: "Product 22", price: 115 },
-    { id: 23, name: "Product 23", price: 120 },
-    { id: 24, name: "Product 24", price: 125 },
-    { id: 25, name: "Product 25", price: 130 },
-    { id: 26, name: "Product 26", price: 135 },
-    { id: 27, name: "Product 27", price: 140 },
-    { id: 28, name: "Product 28", price: 145 },
-    { id: 29, name: "Product 29", price: 150 },
-    { id: 30, name: "Product 30", price: 155 },
-    { id: 31, name: "Product 31", price: 160 },
-    { id: 32, name: "Product 32", price: 165 },
-    { id: 33, name: "Product 33", price: 170 },
-    { id: 34, name: "Product 34", price: 175 },
-    { id: 35, name: "Product 35", price: 180 },
-    { id: 36, name: "Product 36", price: 185 },
-    { id: 37, name: "Product 37", price: 190 },
-    { id: 38, name: "Product 38", price: 195 },
-    { id: 39, name: "Product 39", price: 200 },
-    { id: 40, name: "Product 40", price: 205 },
-    { id: 41, name: "Product 41", price: 210 },
-    { id: 42, name: "Product 42", price: 215 },
-    { id: 43, name: "Product 43", price: 220 },
-    { id: 44, name: "Product 44", price: 225 },
-    { id: 45, name: "Product 45", price: 230 },
-    { id: 46, name: "Product 46", price: 235 },
-    { id: 47, name: "Product 47", price: 240 },
-    { id: 48, name: "Product 48", price: 245 },
-    { id: 49, name: "Product 49", price: 250 },
-    { id: 50, name: "Product 50", price: 255 },
-  ]);
 
   const handleSearch = (text) => {
     setSearchQuery(text);
@@ -89,9 +42,13 @@ const ProductsList = (props) => {
   };
 
   const renderProductItem = ({ item }) => (
-    <ProductItem item={item} isEdit={props.isEdit} isForSale={props.isForSale}/>
+    <ProductItem
+      item={item}
+      isEdit={props.isEdit}
+      isForSale={props.isForSale}
+    />
   );
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -117,7 +74,6 @@ const ProductsList = (props) => {
           />
         </TouchableOpacity>
       </View>
-      
 
       {showFilter && (
         <View style={styles.filterContainer}>
@@ -135,20 +91,20 @@ const ProductsList = (props) => {
             containerStyle={{ height: 40 }}
             style={[styles.searchContainer, styles.dropDownPicker]}
             dropDownContainerStyle={styles.dropDownContainerStyle}
-
             onChangeItem={(item) => setFilter(item.value)}
           />
         </View>
       )}
-      <FlatList
-        data={products}
-        renderItem={renderProductItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.productList}
-        showsVerticalScrollIndicator={false}
-      />
 
-      
+      {props.products.length !== 0 && (
+        <FlatList
+          data={props.products}
+          renderItem={renderProductItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.productList}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
@@ -200,4 +156,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductsList;
+const mapStateToProps = (state) => {
+  return {
+    products: state.products.products,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setProductsList: (products) => dispatch(setProductsList(products)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsList);

@@ -12,8 +12,11 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import { connect } from "react-redux";
 import { addToCart, removeFromCart } from "../../context/actions/cartAction";
+import { setProductsList } from "../../context/actions/productsAction";
 
 import CustomModal from "./CustomModal";
+
+import {addProduct, updateProduct, getAllProducts} from "../Database/dbStore";
 
 const ProductModal = (props) => {
   const [openPicker, setOpenPicker] = useState(false);
@@ -29,7 +32,43 @@ const ProductModal = (props) => {
   const [category, setCategory] = useState(props?.product?.category);
   const [description, setDescription] = useState(props?.product?.description);
 
-  const action = () => {};
+
+  const saveProduct = async () => {
+    if (!name || !price || !category || !description) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    const product = {
+      id: props.product?.id,
+      name,
+      price: parseFloat(price),
+      category,
+      description,
+    };
+
+    console.log('product -> ' + JSON.stringify(product));
+
+    if (props.product) {
+      product.id = props.product.id;
+      await updateProduct(product);
+    } else {
+      await addProduct(product);
+    }
+
+    const products = await getAllProducts();
+    props.setProductsList(products);
+    console.log('products after save -> ' + JSON.stringify(products));
+    clearFields();
+    props.onCancel();
+  };
+
+  const clearFields = () => {
+    setName("");
+    setPrice("");
+    setCategory("");
+    setDescription("");
+  }
 
   return (
     <CustomModal
@@ -41,7 +80,7 @@ const ProductModal = (props) => {
       cancelColorRipple="gray"
       submitColor="green"
       submitColorRipple="darkgreen"
-      onSubmit={action}
+      onSubmit={saveProduct}
     >
       <View style={styles.container}>
         <Text style={styles.text}>Nome do Produto</Text>
@@ -93,6 +132,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addToCart: (product) => dispatch(addToCart(product)),
     removeFromCart: (product) => dispatch(removeFromCart(product)),
+    setProductsList: (products) => dispatch(setProductsList(products)),
   };
 };
 
