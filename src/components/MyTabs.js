@@ -9,6 +9,7 @@ import { Badge } from "react-native-elements";
 
 import { connect } from "react-redux";
 import { setProductsList } from "../../context/actions/productsAction";
+import { setCategoriesList } from "../../context/actions/categoriesAction";
 
 import SalesScreen from "../screens/SalesScreen";
 
@@ -20,21 +21,24 @@ import SalesListScreen from "../screens/SalesListScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 
 
-import { getAllProducts } from "../Database/dbStore";
+import { getAllProducts, getAllCategories } from "../Database/dbStore";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MyTabs = (props) => {
 
-  async function fetchProducts() {
-    console.log("fetchProducts............");
+  async function fetchData() {
+    console.log("fetchData............");
     const products = await getAllProducts();
     props.setProductsList(products);
+
+    const categories = await getAllCategories();
+    props.setCategoriesList(categories);
   }
 
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
 
 
@@ -183,6 +187,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setProductsList: (products) => dispatch(setProductsList(products)),
+    setCategoriesList: (categories) => dispatch(setCategoriesList(categories)),
   };
 };
 

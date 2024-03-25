@@ -9,7 +9,8 @@ export async function createTables() {
   return new Promise((resolve, reject) => {
     const query = `CREATE TABLE IF NOT EXISTS Categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT,
+            color TEXT
         )`;
 
     const query2 = `CREATE TABLE IF NOT EXISTS Products (
@@ -177,3 +178,71 @@ export function getProduct(id) {
     );
   });
 }
+
+
+export function getAllCategories() {
+  return new Promise((resolve, reject) => {
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        let query = "select * from Categories"
+        tx.executeSql(query, [], (tx, registros) => {
+          var retorno = [];
+
+          for (let n = 0; n < registros.rows.length; n++) {
+            let obj = {
+              id: registros.rows.item(n).id,
+              name: registros.rows.item(n).name,
+              color: registros.rows.item(n).color,
+            };
+            retorno.push(obj);
+          }
+          resolve(retorno);
+        });
+      },
+      (error) => {
+        console.log(error);
+        resolve([]);
+      }
+    );
+  });
+}
+
+export function addCategory(category) {
+  return new Promise((resolve, reject) => {
+    let query = "INSERT INTO Categories (name, color) VALUES (?, ?)";
+    let dbCx = getDbConnection();
+
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [category.name, category.color], (tx, result) => {
+          resolve(result.rowsAffected > 0);
+        });
+      },
+      (error) => {
+        console.log(error);
+        resolve(false);
+      }
+    );
+  });
+}
+
+export function deleteCategory(id) {
+  return new Promise((resolve, reject) => {
+    let query = "delete from Categories where id=?";
+    let dbCx = getDbConnection();
+
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [id], (tx, result) => {
+          resolve(result.rowsAffected > 0);
+        });
+      },
+      (error) => {
+        console.log(error);
+        resolve(false);
+      }
+    );
+  });
+}
+
