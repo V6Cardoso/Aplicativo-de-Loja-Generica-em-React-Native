@@ -47,8 +47,6 @@ const ProductModal = (props) => {
       description,
     };
 
-    console.log('product -> ' + JSON.stringify(product));
-
     if (props.product) {
       product.id = props.product.id;
       await updateProduct(product);
@@ -58,12 +56,13 @@ const ProductModal = (props) => {
 
     const products = await getAllProducts();
     props.setProductsList(products);
-    console.log('products after save -> ' + JSON.stringify(products));
     clearFields();
     props.onCancel();
   };
 
   const clearFields = () => {
+    if(props.product) // If it's an update, don't clear the fields
+      return;
     setName("");
     setPrice("");
     setCategory("");
@@ -139,7 +138,6 @@ const mapDispatchToProps = (dispatch) => {
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    paddingBottom: 30,
   },
   text: {
     fontSize: 16,

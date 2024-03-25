@@ -6,16 +6,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DropDownPicker from "react-native-dropdown-picker";
 
 import ProductItem from "../components/ProductItem";
 
+import {deleteProduct, getAllProducts} from "../Database/dbStore";
+
 import { connect } from "react-redux";
 import { setProductsList } from "../../context/actions/productsAction";
-
-import { getAllProducts } from "../Database/dbStore";
 
 const ProductsList = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,11 +42,32 @@ const ProductsList = (props) => {
     setValue([]);
   };
 
+  const showDeleteProductAlert = (product) => {
+    Alert.alert(
+      "Deletar produto",
+      `Tem certeza que deseja deletar o produto ${product.name}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        { text: "Sim", onPress: () => deleteProductHandler(product) },
+      ]
+    );
+  };
+
+  const deleteProductHandler = async (product) => {
+    await deleteProduct(product.id);
+    const products = await getAllProducts();
+    props.setProductsList(products);
+  };
+
   const renderProductItem = ({ item }) => (
     <ProductItem
       item={item}
       isEdit={props.isEdit}
       isForSale={props.isForSale}
+      onDelete={showDeleteProductAlert}
     />
   );
 

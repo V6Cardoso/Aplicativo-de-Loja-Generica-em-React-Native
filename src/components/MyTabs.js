@@ -28,6 +28,7 @@ const Stack = createNativeStackNavigator();
 const MyTabs = (props) => {
 
   async function fetchProducts() {
+    console.log("fetchProducts............");
     const products = await getAllProducts();
     props.setProductsList(products);
   }

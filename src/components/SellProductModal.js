@@ -80,7 +80,6 @@ const SellProductModal = (props) => {
     >
       <View style={styles.modalContent}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.modalText}>{props.product.name}</Text>
           {props.product.category && (
             <Text
               style={[
@@ -144,11 +143,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 10,
-  },
-  modalText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   modalView: {
     marginBottom: 10,

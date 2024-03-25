@@ -34,12 +34,25 @@ const ProductItem = (props) => {
           </View>
           <View style={{ position: "absolute", right: 10, bottom: 0 }}>
             {props.item.category && (
-              <Text style={[styles.category, {backgroundColor: props.item.category.color}]}>{props.item.category.text}</Text>
+              <Text
+                style={[
+                  styles.category,
+                  { backgroundColor: props.item.category.color },
+                ]}
+              >
+                {props.item.category.text}
+              </Text>
             )}
           </View>
         </View>
         <View style={{ position: "absolute", right: 10, top: 10 }}>
-          {props.isEdit && <Ionicons name="create-outline" size={24} color="black" />}
+          {props.isEdit && (
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => props.onDelete(props.item)}>
+                <Ionicons name="trash-outline" size={32} color="red" />
+              </TouchableOpacity>
+            </View>
+          )}
           {props.isForSale && (
             <Ionicons name="pricetag-outline" size={24} color="green" />
           )}
@@ -50,6 +63,7 @@ const ProductItem = (props) => {
         <SellProductModal
           product={props.item}
           visible={showModal}
+          title={props.item.name}
           onCancel={closeModalHandler}
           submitText="Adicionar ao carrinho"
           isSell

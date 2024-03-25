@@ -81,6 +81,7 @@ const ManageScreen = ({ navigation }) => {
       />
       <CategoryModal
         visible={showCategoryModal}
+        title="Gerenciar Categorias"
         onCancel={closeCategoryModalHandler}
         submitText="Salvar Categorias"
       />

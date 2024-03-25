@@ -24,7 +24,7 @@ function CustomModal(props) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{props.title}</Text>
+            {props.title && <Text style={styles.modalText}>{props.title}</Text>}
             {props.children}
             {props.hideBottonButtons ? null : 
               <View style={{height: 50}}>
@@ -113,8 +113,10 @@ const styles = StyleSheet.create({
       color: 'white',
     },
     modalText: {
-      marginBottom: 15,
+      marginBottom: 5,
       textAlign: 'center',
+      fontSize: 20,
+      fontWeight: 'bold',
     },
     Input: {
 

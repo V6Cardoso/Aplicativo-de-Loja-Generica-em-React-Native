@@ -25,7 +25,6 @@ const CartScreen = (props) => {
   useEffect(() => {
     setCartItems(props.cart);
     calculateTotalAmount(props.cart);
-    console.log("props.cart", JSON.stringify(props.cart));
   }, [props.cart]);
 
   const calculateTotalAmount = (items) => {
@@ -94,6 +93,7 @@ const CartScreen = (props) => {
       <SellProductModal
           product={item}
           visible={showModal}
+          title={item.name}
           onCancel={closeModalHandler}
           submitText="Atualizar carrinho"
           isEdit
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  console.log(JSON.stringify(state.cart.cart));
   return {
     cart: state.cart.cart,
   };
