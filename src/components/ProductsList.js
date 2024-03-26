@@ -118,11 +118,11 @@ const ProductsList = (props) => {
             placeholder="Filtrar por categoria"
             multiple={true}
             mode="BADGE"
-            badgeDotColors={props.categories.map((category) => category.color)}
+            /* badgeDotColors={props.categories.map((category) => category.color)} */
             containerStyle={{ height: 40 }}
             style={[styles.searchContainer, styles.dropDownPicker]}
             dropDownContainerStyle={styles.dropDownContainerStyle}
-            onSelectItem={(x) => {setItems(x)}}
+            onSelectItem={(item) => {setItems(item)}}
           />
         </View>
       )}
