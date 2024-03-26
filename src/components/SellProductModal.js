@@ -84,10 +84,10 @@ const SellProductModal = (props) => {
             <Text
               style={[
                 styles.category,
-                { backgroundColor: props.product.category.color },
+                { backgroundColor: props.categories.find((category) => category.id === props.product.category)?.color },
               ]}
             >
-              {props.product.category.text}
+              {props.categories.find((category) => category.id === props.product.category)?.name}
             </Text>
           )}
         </View>
@@ -118,6 +118,7 @@ const SellProductModal = (props) => {
 const mapStateToProps = (state) => {
   return {
     cart: state.cart.cart,
+    categories: state.categories.categories,
   };
 };
 
@@ -150,9 +151,15 @@ const styles = StyleSheet.create({
   category: {
     fontSize: 12,
     borderRadius: 5,
-    height: 20,
+    padding: 5,
+    marginVertical: 15,
   },
   description: {
+    borderColor: "lightgray",
+    borderWidth: 1,
+    borderRadius: 5,
+    minHeight: 70,
+    padding: 10,
     fontSize: 14,
   },
   quantityContainer: {

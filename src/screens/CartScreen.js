@@ -52,7 +52,7 @@ const CartScreen = (props) => {
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemPrice}>R${item.price}</Text>
-        <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
+        <Text style={styles.itemQuantity}>Quantidade: {item.quantity}</Text>
       </View>
       <Text style={styles.itemPrice}>
         Total: R${item.price * item.quantity}
