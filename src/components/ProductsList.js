@@ -28,13 +28,13 @@ const ProductsList = (props) => {
 
   const [showFilter, setShowFilter] = useState(false);
   const [openPicker, setOpenPicker] = useState(true);
-  const [items, setItems] = useState([
-    { label: "Categoria 1", value: "1" },
-    { label: "Categoria 2", value: "2" },
-    { label: "Categoria 3", value: "3" },
-    // Add more categories as needed
-  ]);
   const [value, setValue] = useState([]);
+
+  console.log("Categories: ", JSON.stringify(props.categories));
+  console.log("map: ", props.categories.map((category) => {
+    return { label: category.name, value: category.id };
+  }));
+  console.log("map color: ", props.categories.map((category) => category.color));
 
   const filterProducts = () => {
     setShowFilter(!showFilter);
@@ -104,12 +104,15 @@ const ProductsList = (props) => {
             value={value}
             setValue={setValue}
             setOpen={setOpenPicker}
-            items={items}
-            setItems={setItems}
+            items={props.categories.map((category) => {
+              return { label: category.name, value: category.id };
+            }
+            )}
+            /* setItems={setItems} */
             placeholder="Filtrar por categoria"
             multiple={true}
             mode="BADGE"
-            badgeColors={["lightblue", "lightgreen", "lightcoral"]}
+            badgeDotColors={props.categories.map((category) => category.color)}
             containerStyle={{ height: 40 }}
             style={[styles.searchContainer, styles.dropDownPicker]}
             dropDownContainerStyle={styles.dropDownContainerStyle}
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     products: state.products.products,
+    categories: state.categories.categories,
   };
 };
 

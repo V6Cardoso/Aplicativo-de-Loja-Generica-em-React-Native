@@ -20,12 +20,6 @@ import {addProduct, updateProduct, getAllProducts} from "../Database/dbStore";
 
 const ProductModal = (props) => {
   const [openPicker, setOpenPicker] = useState(false);
-  const [items, setItems] = useState([
-    { label: "Categoria 1", value: "1" },
-    { label: "Categoria 2", value: "2" },
-    { label: "Categoria 3", value: "3" },
-    // Add more categories as needed
-  ]);
 
   const [name, setName] = useState(props?.product?.name);
   const [price, setPrice] = useState(props?.product?.price?.toString());
@@ -100,11 +94,12 @@ const ProductModal = (props) => {
         <DropDownPicker
           open={openPicker}
           value={category}
-          items={items}
+          items={props.categories.map((category) => {
+            return { label: category.name, value: category.id };
+          })}
           placeholder="Selecione a categoria"
           setOpen={setOpenPicker}
           setValue={setCategory}
-          setItems={setItems}
           style={[styles.input, styles.dropDownPicker]}
           dropDownContainerStyle={styles.dropDownContainerStyle}
         />
@@ -124,6 +119,7 @@ const ProductModal = (props) => {
 const mapStateToProps = (state) => {
   return {
     cart: state.cart.cart,
+    categories: state.categories.categories,
   };
 };
 

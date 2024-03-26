@@ -18,6 +18,7 @@ export default function App() {
   async function callCreateTable() {
     if (!tabelasCriadas) {
       tabelasCriadas = true;
+      console.log("Criando tabelas......")
       await createTables();
     }
   }

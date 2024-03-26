@@ -6,6 +6,8 @@ import { Badge } from "react-native-elements";
 import SellProductModal from "./SellProductModal";
 import ProductModal from "./ProductModal";
 
+import { connect } from "react-redux";
+
 const ProductItem = (props) => {
   let [showModal, setShowModal] = useState(false);
 
@@ -37,10 +39,10 @@ const ProductItem = (props) => {
               <Text
                 style={[
                   styles.category,
-                  { backgroundColor: props.item.category.color },
+                  { backgroundColor: props.categories.find( (category) => category.id === props.item.category)?.color},
                 ]}
               >
-                {props.item.category.text}
+                {props.categories.find( (category) => category.id === props.item.category)?.name}
               </Text>
             )}
           </View>
@@ -115,7 +117,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     borderRadius: 5,
     color: "#000",
+    padding: 5,
   },
 });
 
-export default ProductItem;
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categories.categories,
+  };
+};
+
+export default connect(mapStateToProps)(ProductItem);
