@@ -20,26 +20,33 @@ import { setProductsList } from "../../context/actions/productsAction";
 
 const ProductsList = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState(props.products);
 
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-    // Implement your search logic here, filter products based on searchQuery
-  };
+  useEffect(() => {
+    setProducts(props.products);
+  }, [props.products]);
+
+  useEffect(() => {
+    const filteredProducts = props.products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (items.length === 0 || items.map(x => x.value).includes(product.category))
+    );
+    setProducts(filteredProducts);
+  }, [searchQuery, items]);
+
+  
 
   const [showFilter, setShowFilter] = useState(false);
   const [openPicker, setOpenPicker] = useState(true);
   const [value, setValue] = useState([]);
-
-  console.log("Categories: ", JSON.stringify(props.categories));
-  console.log("map: ", props.categories.map((category) => {
-    return { label: category.name, value: category.id };
-  }));
-  console.log("map color: ", props.categories.map((category) => category.color));
+  
 
   const filterProducts = () => {
     setShowFilter(!showFilter);
     setOpenPicker(!openPicker);
     setValue([]);
+    setItems([]);
   };
 
   const showDeleteProductAlert = (product) => {
@@ -85,7 +92,7 @@ const ProductsList = (props) => {
           placeholder="Buscar produto"
           placeholderTextColor="#aaa"
           value={searchQuery}
-          onChangeText={handleSearch}
+          onChangeText={(text) => setSearchQuery(text)}
         />
         <TouchableOpacity onPress={() => filterProducts()}>
           <Ionicons
@@ -108,7 +115,6 @@ const ProductsList = (props) => {
               return { label: category.name, value: category.id };
             }
             )}
-            /* setItems={setItems} */
             placeholder="Filtrar por categoria"
             multiple={true}
             mode="BADGE"
@@ -116,14 +122,14 @@ const ProductsList = (props) => {
             containerStyle={{ height: 40 }}
             style={[styles.searchContainer, styles.dropDownPicker]}
             dropDownContainerStyle={styles.dropDownContainerStyle}
-            onChangeItem={(item) => setFilter(item.value)}
+            onSelectItem={(x) => {setItems(x)}}
           />
         </View>
       )}
 
       {props.products.length !== 0 && (
         <FlatList
-          data={props.products}
+          data={products}
           renderItem={renderProductItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.productList}
