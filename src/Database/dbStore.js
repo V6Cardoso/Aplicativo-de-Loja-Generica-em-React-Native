@@ -22,6 +22,23 @@ export async function createTables() {
             FOREIGN KEY (category) REFERENCES Categories(id) ON DELETE SET NULL
         )`;
 
+    const query3 = `CREATE TABLE IF NOT EXISTS Sales (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            price REAL,
+            time TEXT
+        )`;
+
+    const query4 = `CREATE TABLE IF NOT EXISTS SaleItems (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sale INTEGER,
+            product INTEGER,
+            product_name TEXT,
+            quantity INTEGER,
+            price REAL,
+            FOREIGN KEY (sale) REFERENCES Sales(id) ON DELETE CASCADE,
+            FOREIGN KEY (product) REFERENCES Products(id) ON DELETE SET NULL
+        )`;
+
 /*     const query = "DROP TABLE IF EXISTS Categories";
     const query2 = "DROP TABLE IF EXISTS Products";
  */
@@ -31,6 +48,8 @@ export async function createTables() {
       (tx) => {
         tx.executeSql(query);
         tx.executeSql(query2);
+        tx.executeSql(query3);
+        tx.executeSql(query4);
         resolve(true);
       },
       (error) => {
@@ -246,3 +265,126 @@ export function deleteCategory(id) {
   });
 }
 
+export function addSale(sale) {
+  return new Promise((resolve, reject) => {
+    let query = "INSERT INTO Sales (price, time) VALUES (?, ?)";
+    let query2 =
+      "INSERT INTO SaleItems (sale, product, product_name, quantity, price) VALUES (?, ?, ?, ?, ?)";
+    let dbCx = getDbConnection();
+
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [sale.price, sale.time], (tx, result) => {
+          if (result.rowsAffected > 0) {
+            let saleId = result.insertId;
+            sale.items.forEach((item) => {
+              tx.executeSql(
+                query2,
+                [saleId, item.id, item.name, item.quantity, item.price],
+                (tx, result) => {
+                  if (result.rowsAffected <= 0) {
+                    resolve(false);
+                  }
+                }
+              );
+            });
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+        resolve(false);
+      }
+    );
+  });
+}
+
+export function getAllSales() {
+  return new Promise((resolve, reject) => {
+    let query = "select * from Sales";
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [], (tx, registros) => {
+          if (registros.rows.length > 0) {
+            var retorno = [];
+            for (let n = 0; n < registros.rows.length; n++) {
+              let obj = {
+                id: registros.rows.item(n).id,
+                price: registros.rows.item(n).price,
+                time: registros.rows.item(n).time,
+              };
+              retorno.push(obj);
+            }
+            resolve(retorno);
+          }
+        }
+        );
+      }
+    );
+  }
+  );
+}
+
+export function getAllSaleItems() {
+  return new Promise((resolve, reject) => {
+    let query = "select * from SaleItems";
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [], (tx, registros) => {
+          if (registros.rows.length > 0) {
+            var retorno = [];
+            for (let n = 0; n < registros.rows.length; n++) {
+              let obj = {
+                id: registros.rows.item(n).id,
+                sale: registros.rows.item(n).sale,
+                product: registros.rows.item(n).product,
+                product_name: registros.rows.item(n).product_name,
+                quantity: registros.rows.item(n).quantity,
+                price: registros.rows.item(n).price,
+              };
+              retorno.push(obj);
+            }
+            resolve(retorno);
+          }
+        }
+        );
+      }
+    );
+  }
+  );
+}
+
+export function getSaleItems(saleId) {
+  return new Promise((resolve, reject) => {
+    let query = "select * from SaleItems where sale=?";
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [saleId], (tx, registros) => {
+          if (registros.rows.length > 0) {
+            var retorno = [];
+            for (let n = 0; n < registros.rows.length; n++) {
+              let obj = {
+                id: registros.rows.item(n).id,
+                sale: registros.rows.item(n).sale,
+                product: registros.rows.item(n).product,
+                product_name: registros.rows.item(n).product_name,
+                quantity: registros.rows.item(n).quantity,
+                price: registros.rows.item(n).price,
+              };
+              retorno.push(obj);
+            }
+            resolve(retorno);
+          }
+        }
+        );
+      }
+    );
+  }
+  );
+}

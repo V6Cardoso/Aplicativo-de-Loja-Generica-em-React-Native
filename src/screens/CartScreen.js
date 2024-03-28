@@ -10,9 +10,11 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";
 
-import { removeFromCart } from "../../context/actions/cartAction";
+import { removeFromCart, clearCart } from "../../context/actions/cartAction";
 
 import SellProductModal from "../components/SellProductModal";
+
+import { addSale } from "../Database/dbStore";
 
 
 const CartScreen = (props) => {
@@ -66,8 +68,17 @@ const CartScreen = (props) => {
     </View>
   );
 
-  const handleCheckout = () => {
-    // Implement your checkout logic
+  const handleCheckout = async () => {
+    // Add sale to database
+    const sale = {
+      price: totalAmount,
+      time: new Date().toISOString(),
+      items: cartItems,
+    };
+    const result = await addSale(sale);
+    if (result) {
+      props.clearCart();
+    }
   };
 
   return (
@@ -197,6 +208,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     removeFromCart: (product) => dispatch(removeFromCart(product)),
+    clearCart: () => dispatch(clearCart()),
   };
 };
 
