@@ -6,9 +6,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import ProductModal from "../components/ProductModal";
 import CategoryModal from "../components/categoryModal";
 
-export const CustomButton = (
-  props
-) => {
+export const CustomButton = (props) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
@@ -34,11 +32,11 @@ const ManageScreen = ({ navigation }) => {
 
   const closeCategoryModalHandler = () => {
     setShowCategoryModal(false);
-  }
+  };
 
   const dispatchPressCategoryEvent = () => {
     setShowCategoryModal(true);
-  }
+  };
 
   return (
     <View style={styles.container}>
