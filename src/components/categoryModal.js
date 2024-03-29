@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -53,6 +54,25 @@ const CategoryModal = (props) => {
     setOpenPicker(false);
   };
 
+
+  const alertRemoveCategory = (category) => {
+    Alert.alert(
+      "Deletar categoria",
+      `Tem certeza que deseja deletar a categoria ${category.name}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Deletar",
+          onPress: () => removeCategory(category),
+          style: "destructive",
+        },
+      ]
+    );
+  };
+
   const removeCategory = async (category) => {
     await deleteCategory(category.id);
     const categories = await getAllCategories();
@@ -84,7 +104,7 @@ const CategoryModal = (props) => {
                   <Text style={[styles.buttonContent]}>{item.name}</Text>
                   <TouchableOpacity
                     style={styles.buttonContent}
-                    onPress={() => removeCategory(item)}
+                    onPress={() => alertRemoveCategory(item)}
                   >
                     <Icon name="trash" size={20} color="red" />
                   </TouchableOpacity>
