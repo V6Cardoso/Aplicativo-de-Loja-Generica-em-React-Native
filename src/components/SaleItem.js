@@ -12,6 +12,18 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const SaleItem = (props) => {
   const [open, setOpen] = useState(false);
 
+  function formatDate(dateString) {
+    const options = {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR", options);
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => setOpen(!open)}>
@@ -26,7 +38,7 @@ const SaleItem = (props) => {
           </View>
           <View style={styles.columnData}>
             <Text>Data</Text>
-            <Text>{props.item.time}</Text>
+            <Text>{formatDate(props.item.time)}</Text>
           </View>
         </View>
         <View style={[styles.cardDetails, styles.button]}>

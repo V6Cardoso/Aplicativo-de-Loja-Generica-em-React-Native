@@ -39,10 +39,18 @@ const ProductItem = (props) => {
               <Text
                 style={[
                   styles.category,
-                  { backgroundColor: props.categories.find( (category) => category.id === props.item.category)?.color},
+                  {
+                    backgroundColor: props.categories.find(
+                      (category) => category.id === props.item.category
+                    )?.color,
+                  },
                 ]}
               >
-                {props.categories.find( (category) => category.id === props.item.category)?.name}
+                {
+                  props.categories.find(
+                    (category) => category.id === props.item.category
+                  )?.name
+                }
               </Text>
             )}
           </View>

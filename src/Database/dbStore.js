@@ -388,3 +388,56 @@ export function getSaleItems(saleId) {
   }
   );
 }
+
+export function mostSellingProducts() {
+  return new Promise((resolve, reject) => {
+    let query = "select product, product_name, sum(quantity) as total from SaleItems group by product order by total desc";
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [], (tx, registros) => {
+          if (registros.rows.length > 0) {
+            var retorno = [];
+            for (let n = 0; n < registros.rows.length; n++) {
+              let obj = {
+                product: registros.rows.item(n).product,
+                product_name: registros.rows.item(n).product_name,
+                total: registros.rows.item(n).total,
+              };
+              retorno.push(obj);
+            }
+            resolve(retorno);
+          }
+        }
+        );
+      }
+    );
+  }
+  );
+}
+
+export function getSalesGroupByDate() {
+  return new Promise((resolve, reject) => {
+    let query = "select date(time) as date, count(*) as count from Sales group by date(time)";
+    let dbCx = getDbConnection();
+    dbCx.transaction(
+      (tx) => {
+        tx.executeSql(query, [], (tx, registros) => {
+          if (registros.rows.length > 0) {
+            var retorno = [];
+            for (let n = 0; n < registros.rows.length; n++) {
+              let obj = {
+                date: registros.rows.item(n).date,
+                count: registros.rows.item(n).count,
+              };
+              retorno.push(obj);
+            }
+            resolve(retorno);
+          }
+        }
+        );
+      }
+    );
+  }
+  );
+}
