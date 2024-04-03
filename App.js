@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button } from "react-native";
 import React from "react";
-import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MyTabs from "./src/components/MyTabs";
@@ -10,22 +9,8 @@ import { Provider } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
-import { createTables } from "./src/Database/dbStore";
-
 export default function App() {
-  let tabelasCriadas = false;
-
-  async function callCreateTable() {
-    if (!tabelasCriadas) {
-      tabelasCriadas = true;
-      console.log("Criando tabelas......")
-      await createTables();
-    }
-  }
-
-  useEffect(() => {
-    callCreateTable();
-  }, []);
+  
 
   return (
     <Provider store={store}>

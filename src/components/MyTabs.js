@@ -20,15 +20,26 @@ import EditProductsScreen from "../screens/EditProductsScreen";
 import SalesListScreen from "../screens/SalesListScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 
-
-import { getAllProducts, getAllCategories } from "../Database/dbStore";
+import { createTables, getAllProducts, getAllCategories } from "../Database/dbStore";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MyTabs = (props) => {
 
+  let tabelasCriadas = false;
+
+  async function callCreateTable() {
+    if (!tabelasCriadas) {
+      tabelasCriadas = true;
+      console.log("Criando tabelas......")
+      await createTables();
+    }
+  }
+
   async function fetchData() {
+    await callCreateTable();
+
     console.log("fetchData............");
     const products = await getAllProducts();
     props.setProductsList(products);
