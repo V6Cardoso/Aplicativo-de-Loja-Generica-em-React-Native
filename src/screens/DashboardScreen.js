@@ -49,7 +49,7 @@ const DashboardScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Produtos mais vendidos</Text>
+      <Text style={styles.title}>5 Produtos mais vendidos</Text>
       <PieChart
         data={products}
         width={screenWidth - 15}
@@ -59,6 +59,8 @@ const DashboardScreen = () => {
         backgroundColor={"transparent"}
         paddingLeft={"15"}
         style={styles.chart}
+        
+        
       />
       <Text style={styles.title}>Heatmap de vendas</Text>
       <ContributionGraph

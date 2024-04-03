@@ -391,7 +391,7 @@ export function getSaleItems(saleId) {
 
 export function mostSellingProducts() {
   return new Promise((resolve, reject) => {
-    let query = "select product, product_name, sum(quantity) as total from SaleItems group by product order by total desc";
+    let query = "select product, product_name, sum(quantity) as total from SaleItems group by product order by total desc limit 5";
     let dbCx = getDbConnection();
     dbCx.transaction(
       (tx) => {
